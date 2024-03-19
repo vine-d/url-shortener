@@ -5,7 +5,7 @@ async function setupDb() {
     CREATE TABLE IF NOT EXISTS short_links (
       id SERIAL PRIMARY KEY,
       original_url TEXT NOT NULL,
-      code TEXT NOT NULL,
+      code TEXT UNIQUE NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`
   await sql.end()
