@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    environment:
+      - POSTGRESQL_USERNAME=myuser
+      - POSTGRESQL_PASSWORD=mypassword
+      - POSTGRESQL_DATABASE=shortener
+    ports:
+      - '5432:5432'
+    volumes:
+      - 'postgres_data:/bitnami/postgresql'
+
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - REDIS_PASSWORD=myredispassword
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/bitnami/redis/data'
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local

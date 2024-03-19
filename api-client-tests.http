@@ -1,0 +1,3 @@
+// this file uses/require vscode extension: REST Client
+
+GET http://localhost:3333/test
