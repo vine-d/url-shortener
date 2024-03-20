@@ -2,6 +2,7 @@ import fastify from 'fastify'
 import postgres from 'postgres'
 import { sql } from './lib/postgres'
 import { CreateLinkRequest, ExpandCodeParams } from './types'
+import { redis } from './lib/redis'
 
 const port = 3333
 
@@ -19,7 +20,11 @@ app.post('/:code', async (request, response) => {
   if (result.length !== 1) {
     return response.status(404).send({ error: 'Not found' })
   }
+  const id = result[0].id
   const url = result[0].original_url
+
+  await redis.zIncrBy('expanded-codes', 1, String(id))
+
   return response.redirect(301, url)
 })
 
@@ -55,6 +60,13 @@ app.post('/api/links', async (request, response) => {
     console.error(err)
     return response.status(500).send({ message: 'Internal Server Error' })
   }
+})
+
+app.get('/api/metrics', async (_request, response) => {
+  const result = await redis.zRangeByScoreWithScores('expanded-codes', 0, 50)
+  return result
+    .sort((a, b) => b.score - a.score)
+    .map((item) => ({ shortLinkId: Number(item.value), clicks: item.score }))
 })
 
 app.listen({ port }).then(() => {

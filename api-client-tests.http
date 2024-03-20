@@ -1,5 +1,6 @@
 // this file uses/require vscode extension: REST Client
 
+### Create new URL code
 POST http://localhost:3333/api/links
 Content-Type: application/json
 
@@ -8,13 +9,16 @@ Content-Type: application/json
   "url": "http://test.com"
 }
 
-###
+### Get all codes/urls
 GET http://localhost:3333/api/links
 
-###
+### Expand a code to its original URL
 POST http://localhost:3333/test
 Content-Type: application/json
 
 {
   "code": "test"
 }
+
+### Get metrics - expanded code -> url
+GET http://localhost:3333/api/metrics
